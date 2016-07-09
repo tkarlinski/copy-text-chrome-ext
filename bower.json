@@ -1,0 +1,11 @@
+{
+  "name": "copy-text-chrome-ext",
+  "dependencies": {
+    "jquery": "3.0.0"
+  },
+  "license": "tkarlinski",
+  "ignore": [
+    "**/.*"
+  ],
+  "private": true
+}
