@@ -1,9 +1,3 @@
-function debug(message)
-{
-    //console.log(message);
-    //alert(message)
-}
-
 /**
  * Remove scripts as js, css and special chars
  *
@@ -45,10 +39,6 @@ function stringTrim(string) {
  */
 function sendTextByRawXhr(text)
 {
-    debug('sendTextByRawXhr');
-
-    //text = 'test 6'
-
     chrome.runtime.sendMessage({
         method: 'POST',
         action: 'xhttp',
@@ -79,9 +69,6 @@ function sendTextByRawXhr(text)
  */
 function DOMtoString(document_root)
 {
-
-    debug('DOMToString');
-
     var html = '',
         node = document_root.firstChild;
     while (node) {
@@ -110,8 +97,6 @@ function htmlToText(html)
     text = stripTags(text);
     return text;
 }
-
-debug('start getPageSource');
 
 var text = htmlToText(DOMtoString(document));
 

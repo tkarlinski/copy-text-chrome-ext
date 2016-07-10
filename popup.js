@@ -1,26 +1,7 @@
-chrome.runtime.onMessage.addListener(function(request, sender) {
+chrome.runtime.onMessage.addListener(function(request, sender, callback) {
     if (request.action == "getSource") {
         message.innerText = request.source;
     }
-});
-
-function onWindowLoad() {
-
-    var message = document.querySelector('#message');
-
-    chrome.tabs.executeScript(null,
-        {
-            file: "getPagesSource.js"
-        },
-        function(result) {
-            if (chrome.runtime.lastError) {
-                message.innerText = 'There was an error injecting script : \n' + chrome.runtime.lastError.message;
-            }
-        }
-    );
-}
-
-chrome.runtime.onMessage.addListener(function(request, sender, callback) {
     if (request.action == "xhttp") {
         var xhttp = new XMLHttpRequest();
         var method = request.method ? request.method.toUpperCase() : 'GET';
@@ -39,5 +20,21 @@ chrome.runtime.onMessage.addListener(function(request, sender, callback) {
         return true; // prevents the callback from being called too early on return
     }
 });
+
+function onWindowLoad() {
+
+    var message = document.querySelector('#message');
+
+    chrome.tabs.executeScript(null,
+        {
+            file: "getPagesSource.js"
+        },
+        function(result) {
+            if (chrome.runtime.lastError) {
+                message.innerText = 'There was an error injecting script : \n' + chrome.runtime.lastError.message;
+            }
+        }
+    );
+}
 
 window.onload = onWindowLoad;
