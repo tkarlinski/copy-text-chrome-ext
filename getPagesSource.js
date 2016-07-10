@@ -31,7 +31,7 @@ function stripTags(html)
  * @return {string}
  */
 function stringTrim(string) {
-    return string.replace(/^\s{2}|\n{2}|\r{2}$/gm,'');
+    return string.replace(/[\s\n\r]{2,}]/gm,'');
 }
 
 /**
