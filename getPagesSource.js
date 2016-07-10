@@ -1,80 +1,87 @@
-var result;
+function debug(message)
+{
+    //console.log(message);
+    //alert(message)
+}
 
+/**
+ * Remove scripts as js, css and special chars
+ *
+ * @param {string} html
+ * @return {string}
+ */
 function removeScripts(html)
 {
     html = html.replace(/\<script[.\s\S]*?\<\/script\>/g, '');
     html = html.replace(/\<noscript[.\s\S]*?\<\/noscript\>/g, '');
     html = html.replace(/\<style[.\s\S]*?\<\/style\>/g, '');
-    return html.replace(/\&.*?\;/g, '');
+    html = html.replace(/\&.*?\;/g, '');
+    html = html.replace(/\&*/g, '');;
+    return html;
 }
 
+/**
+ * Strip html tags
+ *
+ * @param {string} html
+ */
 function stripTags(html)
 {
     return html.replace(/<(?:.|\n)*?>/gm, '');
 }
 
+/**
+ * Remove white chars
+ *
+ * @param string
+ * @return {string}
+ */
 function stringTrim(string) {
-    return string.replace(/^\s+|\s+$/gm,'');
+    return string.replace(/^\s{2}|\n{2}|\r{2}$/gm,'');
 }
 
-function sendTextByXhr(text)
-{
-    var message = '';
-    var url = 'http://api.lang-master.lh/index.php/text';
-
-    $.ajax({
-        type: "POST",
-        url: url,
-        data: {
-            text: text,
-            tag: 3
-        },
-        success: function(data) {
-            alert(data.message);
-            console.log('data success', data);
-            //chrome.runtime.sendMessage({
-            //    action: "getSource",
-            //    source: data.message
-            //});
-
-            return 'ajax success';
-        },
-        error: function(xhr, status, err) {
-            alert('error: ' + err.toString());
-            //chrome.runtime.sendMessage({
-            //    action: "getSource",
-            //    source: err.toString()
-            //});
-
-            return 'ajax error';
-        }
-    });
-
-    return message;
-}
-
+/**
+ * @param {string} text
+ */
 function sendTextByRawXhr(text)
 {
-    text = 'va=123&fsdf=4';
+    debug('sendTextByRawXhr');
+
+    //text = 'test 6'
 
     chrome.runtime.sendMessage({
         method: 'POST',
         action: 'xhttp',
         url: 'http://api.lang-master.lh/index.php/text',
-        data: 'tag=3&text="' + text + 'h"'
+        data: 'tag=3&text="' + text + '"'
     }, function(responseText) {
-        console.log('responseText', responseText);
+        var responseObject = JSON.parse(responseText);
+        var message = 'No information from api';
+
+        if (typeof responseObject.error != 'undefined') {
+            message = 'API error: \n' + responseObject.error;
+        } else if (typeof responseObject.message != 'undefined') {
+            message = 'Done \n API message: \n' + responseObject.message;
+        }
 
         chrome.runtime.sendMessage({
             action: "getSource",
-            source: responseText
+            source: message
         });
-        /*Callback function to deal with the response*/
     });
 }
 
+/**
+ * Convert DOM to html string
+ *
+ * @param {object} document_root
+ * @return {string}
+ */
+function DOMtoString(document_root)
+{
 
-function DOMtoString(document_root) {
+    debug('DOMToString');
+
     var html = '',
         node = document_root.firstChild;
     while (node) {
@@ -89,33 +96,23 @@ function DOMtoString(document_root) {
         node = node.nextSibling;
     }
 
+    return html;
+}
+
+/**
+ * @param {string} html
+ * @return {string}
+ */
+function htmlToText(html)
+{
     var text = removeScripts(html);
     text = stringTrim(text);
     text = stripTags(text);
-
-
-
-    //sendTextByXhr(text);
-
     return text;
 }
 
-function main() {
-    var text = DOMtoString(document);
+debug('start getPageSource');
 
-    sendTextByRawXhr(text);
+var text = htmlToText(DOMtoString(document));
 
-    console.log('111');
-    //
-    chrome.runtime.sendMessage({
-        action: "getSource",
-        source: DOMtoString(document)
-    });
-
-    console.log('222');
-
-    return text;
-}
-main();
-
-
+sendTextByRawXhr(text);
