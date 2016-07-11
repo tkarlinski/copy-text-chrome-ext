@@ -17,7 +17,7 @@ chrome.runtime.onMessage.addListener(function(request, sender, callback) {
             xhttp.setRequestHeader('Content-Type', 'application/x-www-form-urlencoded');
         }
         xhttp.send(request.data);
-        return true; // prevents the callback from being called too early on return
+        return true;
     }
 });
 
@@ -27,7 +27,7 @@ function onWindowLoad() {
 
     chrome.tabs.executeScript(null,
         {
-            file: "getPagesSource.js"
+            file: "background.js"
         },
         function(result) {
             if (chrome.runtime.lastError) {

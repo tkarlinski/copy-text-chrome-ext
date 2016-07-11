@@ -1,3 +1,8 @@
+var config = {
+    apiUrl: 'http://example.eu',
+    apiData: 'text="{text}"'
+};
+
 /**
  * Remove scripts as js, css and special chars
  *
@@ -42,8 +47,8 @@ function sendTextByRawXhr(text)
     chrome.runtime.sendMessage({
         method: 'POST',
         action: 'xhttp',
-        url: 'http://api.lang-master.lh/index.php/text',
-        data: 'tag=3&text="' + text + '"'
+        url: config.apiUrl,
+        data: config.apiData.replace('{text}', text)
     }, function(responseText) {
         var responseObject = JSON.parse(responseText);
         var message = 'No information from api';
