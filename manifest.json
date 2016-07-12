@@ -10,14 +10,11 @@
   "permissions": [
       "tabs",
       "<all_urls>",
-      "http://*/*",
-      "https://*/*/index.php/text",
-      "http://api.lang-master.lh/index.php/text"
+      "http://*/*"
   ],
   "background":
   {
     "scripts": [
-      "components/jquery/dist/jquery.js",
       "popup.js"
     ]
   }

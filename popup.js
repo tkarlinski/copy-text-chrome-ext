@@ -27,7 +27,7 @@ function onWindowLoad() {
 
     chrome.tabs.executeScript(null,
         {
-            file: "background.js"
+            file: "tabsScript.js"
         },
         function(result) {
             if (chrome.runtime.lastError) {
